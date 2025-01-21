@@ -1,0 +1,69 @@
+import re
+
+"""Define lists of positive and negative words (this can be expanded)"""
+positive_words = ["good", "great", "excellent", "amazing", "love", "best", "awesome", "happy", "fantastic", "positive"]
+negative_words = ["bad", "horrible", "terrible", "awful", "hate", "worst", "disappointing", "negative", "poor", "sad"]
+
+"""Function to clean and preprocess the comment"""
+def preprocess_comment(comment):
+   """Convert the comment to lowercase"""
+    comment = comment.lower()
+   """Remove any non-alphabetic characters (punctuation, numbers, etc.)"""
+    comment = re.sub(r'[^a-z\s]', '', comment)
+    return comment
+
+"""Function to tokenize the comment into words"""
+def tokenize_comment(comment):
+   """Split the comment into individual words"""
+    words = comment.split()
+    return words
+
+"""Function to calculate the score based on positive and negative words"""
+def assign_score(comment):
+   """Preprocess and tokenize the comment"""
+    comment = preprocess_comment(comment)
+    words = tokenize_comment(comment)
+
+   """Initialize scores"""
+    positive_score = 0
+    negative_score = 0
+
+"""Count the number of positive and negative words"""
+    for word in words:
+        if word in positive_words:
+            positive_score += 1
+        elif word in negative_words:
+            negative_score += 1
+
+   """Determine overall sentiment score"""
+    if positive_score > negative_score:
+        sentiment = "Positive"
+        score = positive_score - negative_score
+    elif negative_score > positive_score:
+        sentiment = "Negative"
+        score = negative_score - positive_score
+    else:
+        sentiment = "Neutral"
+        score = 0
+
+    return sentiment, score
+
+"""Function to classify the sentiment of the customer's comment"""
+def classify_comment(comment):
+    sentiment, score = assign_score(comment)
+    return f"Sentiment: {sentiment}, Score: {score}"
+
+"""Test the program"""
+if __name__ == "__main__":
+    test_comments = [
+        "The product is amazing and great, I love it!",
+        "This is the worst purchase I have made, absolutely terrible!",
+        "The service was good, but could be improved.",
+        "I hate this product, it's horrible.",
+        "Excellent quality, very happy with my purchase!"
+    ]
+
+    for comment in test_comments:
+        print(f"Comment: {comment}")
+        print(classify_comment(comment))
+        print("-" * 50)
